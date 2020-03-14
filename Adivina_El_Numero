@@ -1,0 +1,165 @@
+package main.logica;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class Operation {
+  //Version 1.0
+	Scanner Input = new Scanner(System.in);
+	
+	private int intentos_realizados = 5;
+	private int datos = 0;
+	private int numero_azar = 0;
+	private	boolean game = true;
+
+	private String name = "";
+	
+	private boolean datosI = false;
+	private boolean Intentos_agotados = false;
+	
+	private void start() {
+		inicializacion();
+	}
+
+	
+	private void inicializacion() {
+		DateUsers();
+		logic();
+	}
+	
+	private void DateUsers() {
+		/* Pedir Datos a Usuario */
+		System.out.println("------------------");
+		System.out.println("---¡Bienvenid@!---");
+		System.out.println("-¿Cual es tu nombre?-");
+		System.out.println("------------------");
+		System.out.print("/--> Nombre: ");
+		name = Input.nextLine();
+		System.out.println("----------------------------------");
+		System.out.println("--------¡Hola " + name + "!--------");
+		System.out.println("--Adivina un número del 1 al 100--");
+		System.out.println("---¿Te crees capaz de hacerlo?----");
+		System.out.println("----------------------------------");
+	}
+	
+	
+	private void logic() {
+		boolean enFuncion = true;
+		boolean reintentoOn = true;
+		
+		char resp;
+		
+		intentos_realizados = 5;
+		
+		if(intentos_realizados < 1) {
+			Intentos_agotados = true;
+		}
+		do {
+			
+			datos = 0;
+			numberRamdon();
+			
+			
+			
+			//Logica y control de jugabilidad
+			while(game == true) {
+				
+				
+				//Contador y control de los intentos				
+				intentos_realizados -= 1;
+				if(intentos_realizados < 1) {
+					intentos_realizados = 0;
+					Intentos_agotados = true;
+				}
+				
+				//Control de ingreso de datos por el usuario
+				if(datosI == false) {
+					if(intentos_realizados < 1) {
+						System.out.println("¡Cuidado! " + name +" Este es tu ultimo intento");
+					}
+					System.out.print("-->Numero: ");
+					datos = Input.nextInt();
+					datosI = true;
+				}
+				
+				//Control y salida de textos del sistema
+				if(datosI == true) {
+					if(datos <= 0 || datos > 100) {
+						System.out.println(
+								"--------------------------------------------------------------------------");
+						System.out.println(
+								"--El Número Que Ha Escojido Esta Fuera de Los Parametros Preestablecidos--");
+						System.out.println(
+								"------------------Por Favor Escoja Un Número Del 1 al 100-----------------");
+						System.out.println(
+								"--------------------------------------------------------------------------");
+						datos = 0;
+						datosI = false;						
+					} else if(datos < numero_azar) {
+						System.out.println("¡" + name + " Ese Número Es Muy Bajo!");
+						datos = 0;
+						datosI = false;
+					} else if(datos > numero_azar) {
+						System.out.println("¡" + name + " Ese Número Es Muy Alto!");
+						datos = 0;
+						datosI = false;
+					} 
+					if(datos == numero_azar) {
+						System.out.println("¡Felicidades " + name + " El Número " + numero_azar + " es el correcto!");
+						game = false;
+						reintentoOn = true;
+					} 
+					if(intentos_realizados == 0 && Intentos_agotados == true) {
+						System.out.println("¡Que lastima " + name + " Has Perdido El Numero Era " + numero_azar + "!");
+						game = false;
+						reintentoOn = true;
+						
+					}
+				}				
+			}	
+			//fin de logica y control
+			
+			//Logica y control del reintento
+			while(reintentoOn == true) {
+				boolean logicR = true;
+				if(logicR == true) {
+					System.out.println("¿Deseas volver a  jugar?" + " (s/n)");
+					resp = Input.next().toLowerCase().charAt(0);
+					
+					if(resp == 's') {
+						System.out.println("Bienvenido de nuevo " + name);
+		                game = true;
+		                reintentoOn = false;
+		                datosI = false;
+		                logicR = false;	                
+		            }else if(resp == 'n') {
+		            	System.out.println("Gracias por Jugar");
+		            	enFuncion = false;
+		            	reintentoOn = false;
+		            	logicR = false;
+		            } else if(resp != 's' && resp != 'n') {
+		                System.out.println("Error! solo se admite S o N");
+		                System.out.println("---------------------------------");
+		                logicR = false;
+		            }
+					
+					intentos_realizados = 5;
+					
+				}
+			}
+			//fin de Logica de reintento
+
+		}while(enFuncion == true);
+	}
+	
+	private void numberRamdon() {	
+			Random r = new Random();
+			numero_azar = (int) (r.nextDouble() * 100);
+	}
+	
+	public static void main(String[] args) {
+		Operation op = new Operation();
+		op.start();
+	}
+
+}
